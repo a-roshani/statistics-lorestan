@@ -9,7 +9,7 @@ window.PORTAL_CONFIG = {
     {
       "id": "chart402",
       "title": "چارت ۴۰۲",
-      "subtitle": "چارت هشت‌ترمی دانشجویان ورودی ۱۴۰۲",
+      "subtitle": "چارت هشت‌ترمی دانشجویان ورودی نیمسال ۴۰۲۱ تا ۴۰۳۱",
       "icon": "📊",
       "kind": "chart",
       "url": "files/chart-402.html",
