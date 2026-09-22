@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#173d67" />
+  <meta name="description" content="درگاه اطلاعات آموزشی گروه آمار دانشگاه لرستان" />
+  <title>گروه آمار دانشگاه لرستان</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <canvas id="stats-bg" aria-hidden="true"></canvas>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <main class="shell">
+    <section class="hero glass">
+      <div class="logo-wrap" aria-label="لوگوی گروه آمار">
+        <img id="site-logo" src="assets/logo-statistics.svg" alt="لوگوی گروه آمار دانشگاه لرستان" />
+      </div>
+      <div class="eyebrow">LORESTAN UNIVERSITY • DEPARTMENT OF STATISTICS</div>
+      <h1 id="site-title">به گروه آمار دانشگاه لرستان خوش آمدید</h1>
+      <p id="site-intro">با استفاده از کلیدهای زیر می‌توانید به چارت‌های درسی، سرفصل‌ها و برنامه‌های آموزشی گروه دسترسی پیدا کنید.</p>
+      <div class="hero-badges">
+        <span>📊 آمار و علم داده</span>
+        <span>🎓 اطلاعات آموزشی</span>
+        <span>⚡ دسترسی سریع</span>
+      </div>
+    </section>
+
+    <section class="resource-section" aria-labelledby="resources-heading">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">دسترسی سریع</span>
+          <h2 id="resources-heading">اطلاعات آموزشی</h2>
+        </div>
+        <button class="soft-btn" id="edit-mode-btn" type="button" title="ویرایش محلی صفحه">⚙️ مدیریت صفحه</button>
+      </div>
+      <div class="resource-grid" id="resource-grid"></div>
+    </section>
+
+    <section class="contact-section glass" aria-labelledby="contact-heading">
+      <div class="section-heading compact">
+        <div>
+          <span class="section-kicker">راه‌های ارتباطی</span>
+          <h2 id="contact-heading">ارتباط با گروه</h2>
+        </div>
+      </div>
+      <div class="contact-grid" id="contact-grid"></div>
+    </section>
+
+    <section class="micro-section">
+      <button class="dice-card" id="dice-toggle" type="button" aria-expanded="false">
+        <span class="dice-icon">🎲</span>
+        <span><strong>تاس آماری</strong><small>یک سرگرمی کوچک در پس‌زمینه‌ی داده‌ها</small></span>
+        <span class="dice-chevron">⌄</span>
+      </button>
+      <div class="dice-panel" id="dice-panel" hidden>
+        <div class="dice-result">
+          <div class="die" id="die-face">⚄</div>
+          <div><strong id="dice-number">۵</strong><span>آخرین پرتاب</span></div>
+        </div>
+        <button class="primary-btn" id="roll-dice" type="button">پرتاب تاس</button>
+        <div class="dice-bars" id="dice-bars" aria-label="فراوانی نتایج تاس"></div>
+      </div>
+    </section>
+
+    <footer>
+      <span>گروه آمار دانشگاه لرستان</span>
+      <span class="dot">•</span>
+      <span>درگاه دسترسی سریع دانشجویان</span>
+    </footer>
+  </main>
+
+  <div class="modal-backdrop" id="editor-backdrop" hidden></div>
+  <aside class="editor" id="editor-panel" aria-hidden="true" aria-label="ویرایشگر صفحه">
+    <div class="editor-head">
+      <div><span class="section-kicker">ویرایش محلی</span><h2>مدیریت صفحه</h2></div>
+      <button class="icon-btn" id="close-editor" type="button" aria-label="بستن">✕</button>
+    </div>
+    <div class="editor-note">تغییرات این بخش فقط در مرورگر شما ذخیره می‌شود. برای انتشار عمومی، فایل تنظیمات را خروجی بگیرید و در GitHub جایگزین کنید.</div>
+
+    <div class="editor-tabs">
+      <button class="tab active" data-tab="links" type="button">کلیدها</button>
+      <button class="tab" data-tab="texts" type="button">متن و تماس</button>
+      <button class="tab" data-tab="publish" type="button">انتشار</button>
+    </div>
+
+    <div class="editor-tab active" data-pane="links">
+      <div class="editor-toolbar"><button class="primary-btn" id="add-link" type="button">＋ افزودن کلید</button></div>
+      <div id="editor-link-list" class="editor-link-list"></div>
+    </div>
+
+    <div class="editor-tab" data-pane="texts">
+      <label>عنوان اصلی<input id="edit-title" type="text" /></label>
+      <label>متن معرفی<textarea id="edit-intro" rows="3"></textarea></label>
+      <div id="editor-contacts"></div>
+      <button class="primary-btn" id="save-texts" type="button">ذخیره متن‌ها</button>
+    </div>
+
+    <div class="editor-tab" data-pane="publish">
+      <div class="publish-box">
+        <h3>خروجی برای GitHub</h3>
+        <p>پس از ویرایش، فایل تنظیمات جدید را دانلود کنید و آن را جایگزین <code>data/portal-config.js</code> کنید.</p>
+        <button class="primary-btn" id="export-config" type="button">⬇️ دانلود portal-config.js</button>
+        <button class="soft-btn full" id="reset-local" type="button">↺ بازگشت به نسخه اصلی</button>
+      </div>
+    </div>
+  </aside>
+
+  <dialog id="link-dialog" class="link-dialog">
+    <form method="dialog" id="link-form">
+      <div class="dialog-head"><h3 id="dialog-title">افزودن کلید</h3><button class="icon-btn" value="cancel" type="submit">✕</button></div>
+      <input id="link-id" type="hidden" />
+      <label>عنوان کلید<input id="link-title" required type="text" placeholder="مثلاً چارت ۴۰۶" /></label>
+      <label>توضیح کوتاه<input id="link-subtitle" type="text" placeholder="مثلاً برنامه درسی هشت‌ترمی" /></label>
+      <div class="form-row">
+        <label>نماد<input id="link-icon" type="text" maxlength="3" placeholder="📊" /></label>
+        <label>نوع فایل<select id="link-kind"><option value="chart">چارت</option><option value="book">سرفصل</option><option value="calendar">برنامه</option><option value="file">فایل</option></select></label>
+      </div>
+      <label>مسیر یا لینک فایل<input id="link-url" required type="text" placeholder="files/example.pdf" /></label>
+      <label class="check"><input id="link-download" type="checkbox" /> دکمه دانلود مستقیم هم نمایش داده شود</label>
+      <div class="dialog-actions"><button class="soft-btn" value="cancel" type="submit">انصراف</button><button class="primary-btn" id="save-link" value="default" type="button">ذخیره</button></div>
+    </form>
+  </dialog>
+
+  <script src="data/portal-config.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

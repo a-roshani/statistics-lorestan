@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>چارت دانشجویان کارشناسی آمار ورودی نیمسال اول ۱۴۰۲ تا نیمسال اول ۱۴۰۳</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#242424;
+  --grid:#575757;
+  --semester:#e3eaee;
+  --semester-border:#78858b;
+  --paper:#ffffff;
+  --side-margin:7mm;
+  --w-row:5%;
+  --w-course:29%;
+  --w-code:13%;
+  --w-theory:6%;
+  --w-practical:6%;
+  --w-type:17%;
+  --w-prereq:24%;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:#eef1f3;color:var(--ink);font-family:'Vazirmatn',Tahoma,Arial,sans-serif;}
+body{direction:rtl;}
+.toolbar{position:sticky;top:0;z-index:10;display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px 10px;padding:10px;background:rgba(245,247,248,.96);border-bottom:1px solid #d7dcdf;}
+.toolbar button{font:600 14px 'Vazirmatn',Tahoma,sans-serif;border:1px solid #9aa4a9;border-radius:7px;background:#fff;padding:7px 18px;cursor:pointer;}
+.toolbar .hint{font-size:12px;color:#555;align-self:center;}
+.layout-tools{display:none;gap:8px;align-items:center;flex-wrap:wrap;padding-inline:4px;}
+.editing .layout-tools{display:flex;}
+.setting-box{display:flex;align-items:center;gap:5px;padding:4px 7px;border:1px solid #c2c9cd;border-radius:7px;background:#fff;font-size:12px;}
+.setting-box label{white-space:nowrap;font-weight:600;}
+.setting-box select{font:12px 'Vazirmatn',Tahoma,sans-serif;border:1px solid #aeb7bc;border-radius:5px;padding:3px 5px;background:#fff;}
+.setting-box input[type=range]{width:110px;accent-color:#78858b;}
+.setting-value{min-width:42px;text-align:center;direction:ltr;font-variant-numeric:tabular-nums;color:#39464c;}
+.sheet{width:404mm;min-height:281mm;margin:10px auto;background:var(--paper);padding:3mm var(--side-margin) 3mm;box-shadow:0 2px 14px rgba(0,0,0,.12);overflow:hidden;}
+.main-title{height:10mm;display:flex;align-items:center;justify-content:center;font-size:16.5pt;font-weight:700;line-height:1.1;text-align:center;margin:0;}
+.chart-grid{height:264mm;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(4,1fr);gap:1.15mm 2.0mm;direction:rtl;align-items:start;}
+.semester-wrap{min-width:0;min-height:0;display:flex;align-items:flex-start;justify-content:center;overflow:hidden;}
+.semester{width:100%;border-collapse:collapse;table-layout:fixed;direction:rtl;font-family:'Vazirmatn',Tahoma,Arial,sans-serif;font-size:7.25pt;line-height:1.17;background:#fff;}
+.semester th,.semester td{border:.35mm solid var(--grid);padding:.55mm .65mm;text-align:center;vertical-align:middle;overflow-wrap:anywhere;word-break:normal;}
+.semester .semester-title{background:var(--semester);border-color:var(--semester-border);font-weight:700;font-size:9.4pt;padding:.8mm .5mm;letter-spacing:0;}
+.semester thead th{font-weight:700;}
+.semester .vertical-cell{width:5%;padding:0;overflow:visible;}
+.semester .vertical-text{display:inline-block;white-space:nowrap;transform:rotate(-90deg);transform-origin:center center;font-weight:700;}
+.semester .course{font-weight:500;}
+.semester .code{direction:ltr;unicode-bidi:isolate;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.semester .unit{white-space:nowrap;}
+.semester .sum-label,.semester .sum-value{font-weight:700;}
+.semester .sum-empty{background:#fff;}
+/* adjustable column proportions (kept identical across all 8 semester tables) */
+.semester col.c-row{width:var(--w-row);}
+.semester col.c-course{width:var(--w-course);}
+.semester col.c-code{width:var(--w-code);}
+.semester col.c-theory{width:var(--w-theory);}
+.semester col.c-practical{width:var(--w-practical);}
+.semester col.c-type{width:var(--w-type);}
+.semester col.c-prereq{width:var(--w-prereq);}
+
+.editing .main-title,.editing .semester th,.editing .semester td{outline:1px dashed #8b969c;outline-offset:-1px;cursor:text;}
+.toolbar button.active{background:#e3eaee;border-color:#78858b;}
+.row-tools{display:none;gap:6px;align-items:center;}
+.editing .row-tools{display:flex;}
+.toolbar .danger{border-color:#b7a0a0;}
+.editing .semester tbody tr:not(.summary-row){cursor:pointer;}
+.editing .semester tbody tr.selected-row td{box-shadow:inset 0 0 0 1.2px #5f737d;background:#f4f7f8;}
+.editing .semester tbody tr.selected-row td.course{background:#eef3f5;}
+
+@media print{
+  @page{size:A3 landscape;margin:8mm;}
+  html,body{background:#fff !important;width:auto;height:auto;}
+  .toolbar{display:none !important;}
+  .sheet{width:auto;min-height:0;height:281mm;margin:0;padding:3mm var(--side-margin) 3mm;box-shadow:none;overflow:hidden;}
+  .main-title{height:10mm;}
+  .chart-grid{height:264mm;}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button id="editBtn" onclick="toggleEdit()">ویرایش متن</button>
+  <span class="row-tools" id="rowTools">
+    <button onclick="addRow('above')">افزودن سطر بالا</button>
+    <button onclick="addRow('below')">افزودن سطر پایین</button>
+    <button class="danger" onclick="deleteRow()">حذف سطر</button>
+  </span>
+  <span class="layout-tools" id="layoutTools">
+    <span class="setting-box">
+      <label for="marginRange">حاشیه راست/چپ</label>
+      <input id="marginRange" type="range" min="4" max="20" step="0.5" value="7" oninput="setSideMargin(this.value)">
+      <span class="setting-value" id="marginValue">7 mm</span>
+    </span>
+    <span class="setting-box">
+      <label for="columnSelect">عرض ستون</label>
+      <select id="columnSelect" onchange="syncColumnSlider()">
+        <option value="--w-row">ردیف</option>
+        <option value="--w-course" selected>نام درس</option>
+        <option value="--w-code">کد درس</option>
+        <option value="--w-theory">واحد نظری</option>
+        <option value="--w-practical">واحد عملی</option>
+        <option value="--w-type">نوع درس</option>
+        <option value="--w-prereq">پیشنیاز/همنیاز</option>
+      </select>
+      <input id="columnRange" type="range" min="3" max="40" step="0.5" value="29" oninput="setColumnWidth(this.value)">
+      <span class="setting-value" id="columnValue">29%</span>
+      <button type="button" onclick="resetLayout()">بازنشانی اندازه‌ها</button>
+    </span>
+  </span>
+  <button onclick="saveHtml()">ذخیره فایل HTML</button>
+  <button onclick="window.print()">چاپ چارت</button>
+  <span class="hint" id="editHint">برای چاپ: A3، حالت افقی، مقیاس ۱۰۰٪ و Background graphics روشن باشد.</span>
+</div>
+<main class="sheet">
+  <h1 class="main-title">چارت دانشجویان کارشناسی آمار ورودی نیمسال اول ۱۴۰۲ تا نیمسال اول ۱۴۰۳</h1>
+  <section class="chart-grid"><div class="semester-wrap">
+<table class="semester" aria-label="نیمسال اول">
+<colgroup>
+<col class="c-row"><col class="c-course"><col class="c-code"><col class="c-theory"><col class="c-practical"><col class="c-type"><col class="c-prereq">
+</colgroup>
+<thead>
+<tr><th colspan="7" class="semester-title">نیمسال اول</th></tr>
+<tr>
+<th rowspan="2" class="vertical-cell"><span class="vertical-text">ردیف</span></th>
+<th rowspan="2">نام درس</th>
+<th rowspan="2">کد درس</th>
+<th colspan="2">تعداد واحد</th>
+<th rowspan="2">نوع درس</th>
+<th rowspan="2">پیشنیاز یا همنیاز</th>
+</tr>
+<tr><th>نظری</th><th>عملی</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>۱</td>
+<td class="course">ریاضی عمومی ۱</td>
+<td class="code">۱۸۵-۱۷-۱۱</td>
+<td class="unit">۴</td>
+<td class="unit"></td>
+<td>پایه</td>
+<td>ندارد</td>
+</tr><tr>
+<td>۲</td>
+<td class="course">تحلیل گرافیکی و اکتشافی داده ها</td>
+<td class="code">۱۸۳-۱۷-۱۱</td>
+<td class="unit">۱</td>
+<td class="unit">۱</td>
+<td>پایه</td>
+<td>ندارد</td>
+</tr><tr>
+<td>۳</td>
+<td class="course">احتمال مقدماتی</td>
+<td class="code">۱۸۴-۱۷-۱۱</td>
+<td class="unit">۱</td>
+<td class="unit"></td>
+<td>پایه</td>
+<td>ندارد</td>
+</tr><tr>
+<td>۴</td>
+<td class="course">مبانی کامپیوتر و برنامه نویسی</td>
+<td class="code">۱۸۸-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>پایه</td>
+<td>ندارد</td>
+</tr><tr>
+<td>۵</td>
+<td class="course">مبانی علم اقتصاد</td>
+<td class="code">۱۹۱-۱۷-۱۱</td>
+<td class="unit">۲</td>
+<td class="unit"></td>
+<td>پایه</td>
+<td>ندارد</td>
+</tr><tr>
+<td>۶</td>
+<td class="course">دروس عمومی</td>
+<td class="code"></td>
+<td class="unit">۵</td>
+<td class="unit"></td>
+<td>عمومی</td>
+<td>یک یا چند درس مطابق با جدول دروس عمومی</td>
+</tr>
+<tr class="summary-row">
+<td colspan="3" class="sum-label">جمع واحد</td>
+<td colspan="2" class="sum-value">۱۷ واحد</td>
+<td colspan="2" class="sum-empty"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="semester-wrap">
+<table class="semester" aria-label="نیمسال دوم">
+<colgroup>
+<col class="c-row"><col class="c-course"><col class="c-code"><col class="c-theory"><col class="c-practical"><col class="c-type"><col class="c-prereq">
+</colgroup>
+<thead>
+<tr><th colspan="7" class="semester-title">نیمسال دوم</th></tr>
+<tr>
+<th rowspan="2" class="vertical-cell"><span class="vertical-text">ردیف</span></th>
+<th rowspan="2">نام درس</th>
+<th rowspan="2">کد درس</th>
+<th colspan="2">تعداد واحد</th>
+<th rowspan="2">نوع درس</th>
+<th rowspan="2">پیشنیاز یا همنیاز</th>
+</tr>
+<tr><th>نظری</th><th>عملی</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>۷</td>
+<td class="course">ریاضی عمومی ۲</td>
+<td class="code">۱۸۶-۱۷-۱۱</td>
+<td class="unit">۴</td>
+<td class="unit"></td>
+<td>پایه</td>
+<td>ریاضی عمومی ۱</td>
+</tr><tr>
+<td>۸</td>
+<td class="course">مبانی ریاضی مقدماتی</td>
+<td class="code">۱۸۷-۱۷-۱۱</td>
+<td class="unit">۲</td>
+<td class="unit"></td>
+<td>پایه</td>
+<td>ندارد</td>
+</tr><tr>
+<td>۹</td>
+<td class="course">احتمال ۱</td>
+<td class="code">۱۹۷-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (هسته)</td>
+<td>احتمال مقدماتی، ریاضی عمومی ۱</td>
+</tr><tr>
+<td>۱۰</td>
+<td class="course">برنامه نویسی با نرم افزار R</td>
+<td class="code">۱۸۹-۱۷-۱۱</td>
+<td class="unit">۱</td>
+<td class="unit">۱</td>
+<td>پایه</td>
+<td>مبانی کامپیوتر و برنامه نویسی</td>
+</tr><tr>
+<td>۱۱</td>
+<td class="course">دروس عمومی</td>
+<td class="code"></td>
+<td class="unit">۵</td>
+<td class="unit"></td>
+<td>عمومی</td>
+<td>یک یا چند درس مطابق با جدول دروس عمومی</td>
+</tr>
+<tr class="summary-row">
+<td colspan="3" class="sum-label">جمع واحد</td>
+<td colspan="2" class="sum-value">۱۶ واحد</td>
+<td colspan="2" class="sum-empty"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="semester-wrap">
+<table class="semester" aria-label="نیمسال سوم">
+<colgroup>
+<col class="c-row"><col class="c-course"><col class="c-code"><col class="c-theory"><col class="c-practical"><col class="c-type"><col class="c-prereq">
+</colgroup>
+<thead>
+<tr><th colspan="7" class="semester-title">نیمسال سوم</th></tr>
+<tr>
+<th rowspan="2" class="vertical-cell"><span class="vertical-text">ردیف</span></th>
+<th rowspan="2">نام درس</th>
+<th rowspan="2">کد درس</th>
+<th colspan="2">تعداد واحد</th>
+<th rowspan="2">نوع درس</th>
+<th rowspan="2">پیشنیاز یا همنیاز</th>
+</tr>
+<tr><th>نظری</th><th>عملی</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>۱۲</td>
+<td class="course">روشهای آماری</td>
+<td class="code">۱۹۹-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (هسته)</td>
+<td>تحلیل گرافیکی و اکتشافی داده ها، احتمال ۱</td>
+</tr><tr>
+<td>۱۳</td>
+<td class="course">احتمال ۲</td>
+<td class="code">۱۹۸-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (هسته)</td>
+<td>احتمال ۱، ریاضی عمومی ۲(همنیاز)</td>
+</tr><tr>
+<td>۱۴</td>
+<td class="course">جبر خطی برای آمار</td>
+<td class="code">۲۱۲-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (هسته)</td>
+<td>مبانی ریاضی مقدماتی، ریاضی عمومی ۱ (همنیاز)</td>
+</tr><tr>
+<td>۱۵</td>
+<td class="course">ریاضی برای آمار</td>
+<td class="code">۲۱۳-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (هسته)</td>
+<td>ریاضی عمومی ۱</td>
+</tr><tr>
+<td>۱۶</td>
+<td class="course">مبانی و کاربردهای پایگاه داده ها</td>
+<td class="code">۱۹۰-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>پایه</td>
+<td>برنامه نویسی با نرم افزار R</td>
+</tr><tr>
+<td>۱۷</td>
+<td class="course">دروس عمومی</td>
+<td class="code"></td>
+<td class="unit">۲</td>
+<td class="unit"></td>
+<td>عمومی</td>
+<td>یک یا چند درس مطابق با جدول دروس عمومی</td>
+</tr>
+<tr class="summary-row">
+<td colspan="3" class="sum-label">جمع واحد</td>
+<td colspan="2" class="sum-value">۱۷ واحد</td>
+<td colspan="2" class="sum-empty"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="semester-wrap">
+<table class="semester" aria-label="نیمسال چهارم">
+<colgroup>
+<col class="c-row"><col class="c-course"><col class="c-code"><col class="c-theory"><col class="c-practical"><col class="c-type"><col class="c-prereq">
+</colgroup>
+<thead>
+<tr><th colspan="7" class="semester-title">نیمسال چهارم</th></tr>
+<tr>
+<th rowspan="2" class="vertical-cell"><span class="vertical-text">ردیف</span></th>
+<th rowspan="2">نام درس</th>
+<th rowspan="2">کد درس</th>
+<th colspan="2">تعداد واحد</th>
+<th rowspan="2">نوع درس</th>
+<th rowspan="2">پیشنیاز یا همنیاز</th>
+</tr>
+<tr><th>نظری</th><th>عملی</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>۱۸</td>
+<td class="course">نظریه آمار ۱</td>
+<td class="code">۲۰۰-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصص الزامی (هسته)</td>
+<td>روشهای آماری، احتمال ۲</td>
+</tr><tr>
+<td>۱۹</td>
+<td class="course">طرح و تحلیل آزمایش های ۱</td>
+<td class="code">۲۰۴-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصص الزامی (هسته)</td>
+<td>روشهای آماری، رگرسیون ۱ (همنیاز)</td>
+</tr><tr>
+<td>۲۰</td>
+<td class="course">رگرسیون ۱</td>
+<td class="code">۲۰۵-۱۷-۱۱</td>
+<td class="unit">۲</td>
+<td class="unit">۱</td>
+<td>تخصصی الزامی (هسته)</td>
+<td>نظریه آمار۱ (همنیاز)، جبر خطی برای آمار</td>
+</tr><tr>
+<td>۲۱</td>
+<td class="course">روشهای عددی و شبیه سازی</td>
+<td class="code">۲۱۹-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (بسته ۱)</td>
+<td>ریاضی برای آمار، جبر خطی برای آمار، برنامه نویسی با نرم افزار R، احتمال ۲</td>
+</tr><tr>
+<td>۲۲</td>
+<td class="course">اصول مصور سازی داده ها</td>
+<td class="code">۲۶۵-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>اختیاری</td>
+<td>برنامه نویسی با نرم افزار R</td>
+</tr><tr>
+<td>۲۳</td>
+<td class="course">دروس عمومی</td>
+<td class="code"></td>
+<td class="unit">۲</td>
+<td class="unit"></td>
+<td>عمومی</td>
+<td>یک یا چند درس مطابق با جدول دروس عمومی</td>
+</tr>
+<tr class="summary-row">
+<td colspan="3" class="sum-label">جمع واحد</td>
+<td colspan="2" class="sum-value">۱۷ واحد</td>
+<td colspan="2" class="sum-empty"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="semester-wrap">
+<table class="semester" aria-label="نیمسال پنجم">
+<colgroup>
+<col class="c-row"><col class="c-course"><col class="c-code"><col class="c-theory"><col class="c-practical"><col class="c-type"><col class="c-prereq">
+</colgroup>
+<thead>
+<tr><th colspan="7" class="semester-title">نیمسال پنجم</th></tr>
+<tr>
+<th rowspan="2" class="vertical-cell"><span class="vertical-text">ردیف</span></th>
+<th rowspan="2">نام درس</th>
+<th rowspan="2">کد درس</th>
+<th colspan="2">تعداد واحد</th>
+<th rowspan="2">نوع درس</th>
+<th rowspan="2">پیشنیاز یا همنیاز</th>
+</tr>
+<tr><th>نظری</th><th>عملی</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>۲۴</td>
+<td class="course">نظریه آمار ۲</td>
+<td class="code">۲۰۱-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (هسته)</td>
+<td>نظریه آمار ۱</td>
+</tr><tr>
+<td>۲۵</td>
+<td class="course">مبانی آمار زیستی</td>
+<td class="code">۲۴۱-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (بسته ۲)</td>
+<td>رگرسیون ۱</td>
+</tr><tr>
+<td>۲۶</td>
+<td class="course">یادگیری آماری مقدماتی</td>
+<td class="code">۲۰۶-۱۷-۱۱</td>
+<td class="unit">۲</td>
+<td class="unit">۱</td>
+<td>تخصصی الزامی (هسته)</td>
+<td>رگرسیون ۱</td>
+</tr><tr>
+<td>۲۷</td>
+<td class="course">فرآیندهای تصادفی</td>
+<td class="code">۲۰۲-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (هسته)</td>
+<td>احتمال ۲، ریاضی برای آمار</td>
+</tr><tr>
+<td>۲۸</td>
+<td class="course">زبان تخصصی</td>
+<td class="code">۲۱۵-۱۷-۱۱</td>
+<td class="unit">۲</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (هسته)</td>
+<td>رگرسیون ۱، زبان انگلیسی عمومی</td>
+</tr><tr>
+<td>۲۹</td>
+<td class="course">رگرسیون ۲</td>
+<td class="code">۲۱۷-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (بسته ۱)</td>
+<td>رگرسیون ۱</td>
+</tr><tr>
+<td>۳۰</td>
+<td class="course">دروس عمومی</td>
+<td class="code"></td>
+<td class="unit">۲</td>
+<td class="unit"></td>
+<td>عمومی</td>
+<td>یک یا چند درس مطابق با جدول دروس عمومی</td>
+</tr>
+<tr class="summary-row">
+<td colspan="3" class="sum-label">جمع واحد</td>
+<td colspan="2" class="sum-value">۱۹ واحد</td>
+<td colspan="2" class="sum-empty"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="semester-wrap">
+<table class="semester" aria-label="نیمسال ششم">
+<colgroup>
+<col class="c-row"><col class="c-course"><col class="c-code"><col class="c-theory"><col class="c-practical"><col class="c-type"><col class="c-prereq">
+</colgroup>
+<thead>
+<tr><th colspan="7" class="semester-title">نیمسال ششم</th></tr>
+<tr>
+<th rowspan="2" class="vertical-cell"><span class="vertical-text">ردیف</span></th>
+<th rowspan="2">نام درس</th>
+<th rowspan="2">کد درس</th>
+<th colspan="2">تعداد واحد</th>
+<th rowspan="2">نوع درس</th>
+<th rowspan="2">پیشنیاز یا همنیاز</th>
+</tr>
+<tr><th>نظری</th><th>عملی</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>۳۱</td>
+<td class="course">روشهای آماری چند متغیره ۱</td>
+<td class="code">۲۰۹-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصص الزامی (هسته)</td>
+<td>رگرسیون ۱، نظریه آمار ۲ (همنیاز)</td>
+</tr><tr>
+<td>۳۲</td>
+<td class="course">تحلیل سری زمانی کاربردی ۱</td>
+<td class="code">۲۰۳-۱۷-۱۱</td>
+<td class="unit">۲</td>
+<td class="unit">۱</td>
+<td>تخصص الزامی (هسته)</td>
+<td>روشهای آماری، فرآیندهای تصادفی (همنیاز)</td>
+</tr><tr>
+<td>۳۳</td>
+<td class="course">آنالیز ریاضی ۱</td>
+<td class="code">۲۱۴-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (هسته)</td>
+<td>ریاضی عمومی ۱، مبانی ریاضی مقدماتی</td>
+</tr><tr>
+<td>۳۴</td>
+<td class="course">مبانی علم داده ها</td>
+<td class="code">۲۳۷-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (بسته ۲)</td>
+<td>مبانی و کاربردهای پایگاه داده‌ها</td>
+</tr><tr>
+<td>۳۵</td>
+<td class="course">روشهای نمونه گیری</td>
+<td class="code">۲۰۷-۱۷-۱۱</td>
+<td class="unit">۴</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (هسته)</td>
+<td>روشهای آماری</td>
+</tr><tr>
+<td>۳۶</td>
+<td class="course">دروس عمومی</td>
+<td class="code"></td>
+<td class="unit">۲</td>
+<td class="unit"></td>
+<td>عمومی</td>
+<td>یک یا چند درس مطابق با جدول دروس عمومی</td>
+</tr>
+<tr class="summary-row">
+<td colspan="3" class="sum-label">جمع واحد</td>
+<td colspan="2" class="sum-value">۱۸ واحد</td>
+<td colspan="2" class="sum-empty"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="semester-wrap">
+<table class="semester" aria-label="نیمسال هفتم">
+<colgroup>
+<col class="c-row"><col class="c-course"><col class="c-code"><col class="c-theory"><col class="c-practical"><col class="c-type"><col class="c-prereq">
+</colgroup>
+<thead>
+<tr><th colspan="7" class="semester-title">نیمسال هفتم</th></tr>
+<tr>
+<th rowspan="2" class="vertical-cell"><span class="vertical-text">ردیف</span></th>
+<th rowspan="2">نام درس</th>
+<th rowspan="2">کد درس</th>
+<th colspan="2">تعداد واحد</th>
+<th rowspan="2">نوع درس</th>
+<th rowspan="2">پیشنیاز یا همنیاز</th>
+</tr>
+<tr><th>نظری</th><th>عملی</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>۳۷</td>
+<td class="course">مباحثی در آمار کاربردی</td>
+<td class="code">۲۴۴-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>اختیاری</td>
+<td>متناسب با سرفصل تعریف شده</td>
+</tr><tr>
+<td>۳۸</td>
+<td class="course">مبانی آمار ناپارامتری</td>
+<td class="code">۲۱۰-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (هسته)</td>
+<td>رگرسیون ۱ ( همنیاز)</td>
+</tr><tr>
+<td>۳۹</td>
+<td class="course">آمار محاسباتی</td>
+<td class="code">۲۲۳-۱۷-۱۱</td>
+<td class="unit">۲</td>
+<td class="unit">۱</td>
+<td>تخصصی الزامی (بسته ۱)</td>
+<td>روشهای عددی و شبیه سازی، طرح و تحلیل آزمایش های ۱</td>
+</tr><tr>
+<td>۴۰</td>
+<td class="course">تحلیل داده های رسته ای</td>
+<td class="code">۲۰۸-۱۷-۱۱</td>
+<td class="unit">۲</td>
+<td class="unit">۱</td>
+<td>تخصصی الزامی (هسته)</td>
+<td>طرح و تحلیل آزمایش های ۱، نظریه آمار ۲ (همنیاز)</td>
+</tr><tr>
+<td>۴۱</td>
+<td class="course">آشنایی با یادگیری ماشینی</td>
+<td class="code">۲۳۶-۱۷-۱۱</td>
+<td class="unit">۲</td>
+<td class="unit">۱</td>
+<td>تخصصی الزامی (بسته ۲)</td>
+<td>یادگیری آماری مقدماتی</td>
+</tr><tr>
+<td>۴۲</td>
+<td class="course">دروس عمومی</td>
+<td class="code"></td>
+<td class="unit">۲</td>
+<td class="unit"></td>
+<td>عمومی</td>
+<td>یک یا چند درس مطابق با جدول دروس عمومی</td>
+</tr>
+<tr class="summary-row">
+<td colspan="3" class="sum-label">جمع واحد</td>
+<td colspan="2" class="sum-value">۱۷ واحد</td>
+<td colspan="2" class="sum-empty"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="semester-wrap">
+<table class="semester" aria-label="نیمسال هشتم">
+<colgroup>
+<col class="c-row"><col class="c-course"><col class="c-code"><col class="c-theory"><col class="c-practical"><col class="c-type"><col class="c-prereq">
+</colgroup>
+<thead>
+<tr><th colspan="7" class="semester-title">نیمسال هشتم</th></tr>
+<tr>
+<th rowspan="2" class="vertical-cell"><span class="vertical-text">ردیف</span></th>
+<th rowspan="2">نام درس</th>
+<th rowspan="2">کد درس</th>
+<th colspan="2">تعداد واحد</th>
+<th rowspan="2">نوع درس</th>
+<th rowspan="2">پیشنیاز یا همنیاز</th>
+</tr>
+<tr><th>نظری</th><th>عملی</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>۴۳</td>
+<td class="course">داده‌کاوی مقدماتی</td>
+<td class="code">۲۳۵-۱۷-۱۱</td>
+<td class="unit">۲</td>
+<td class="unit">۱</td>
+<td>تخصصی الزامی (بسته ۲)</td>
+<td>یادگیری آماری مقدماتی</td>
+</tr><tr>
+<td>۴۴</td>
+<td class="course">آشنایی با یادگیری عمیق</td>
+<td class="code">۲۶۳-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>اختیاری</td>
+<td>یادگیری آماری مقدماتی</td>
+</tr><tr>
+<td>۴۵</td>
+<td class="course">مباحثی در آمار نظری</td>
+<td class="code">۲۴۳-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>اختیاری</td>
+<td>متناسب با سرفصل تعریف شده</td>
+</tr><tr>
+<td>۴۶</td>
+<td class="course">روش تحقیق و پروژه</td>
+<td class="code">۲۱۱-۱۷-۱۱</td>
+<td class="unit">۲</td>
+<td class="unit">۱</td>
+<td>تخصصی الزامی (هسته)</td>
+<td>روش‌های نمونه‌گیری، طرح و تحلیل آزمایش‌های ۱</td>
+</tr><tr>
+<td>۴۷</td>
+<td class="course">کنترل کیفیت آماری</td>
+<td class="code">۲۲۹-۱۷-۱۱</td>
+<td class="unit">۳</td>
+<td class="unit"></td>
+<td>تخصصی الزامی (بسته ۲)</td>
+<td>روشهای نمونه گیری</td>
+</tr><tr>
+<td>۴۸</td>
+<td class="course">دروس عمومی</td>
+<td class="code"></td>
+<td class="unit">۲</td>
+<td class="unit"></td>
+<td>عمومی</td>
+<td>یک یا چند درس مطابق با جدول دروس عمومی</td>
+</tr>
+<tr class="summary-row">
+<td colspan="3" class="sum-label">جمع واحد</td>
+<td colspan="2" class="sum-value">۱۷ واحد</td>
+<td colspan="2" class="sum-empty"></td>
+</tr>
+</tbody>
+</table>
+</div></section>
+</main>
+
+<script>
+let editing = false;
+let selectedRow = null;
+
+
+const layoutDefaults = {
+  sideMargin: 7,
+  widths: {
+    '--w-row': 5,
+    '--w-course': 29,
+    '--w-code': 13,
+    '--w-theory': 6,
+    '--w-practical': 6,
+    '--w-type': 17,
+    '--w-prereq': 24
+  }
+};
+const widthKeys = Object.keys(layoutDefaults.widths);
+
+function cssNumber(name, fallback) {
+  const v = parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name));
+  return Number.isFinite(v) ? v : fallback;
+}
+
+function setSideMargin(value) {
+  const v = Math.max(4, Math.min(20, parseFloat(value) || layoutDefaults.sideMargin));
+  document.documentElement.style.setProperty('--side-margin', v + 'mm');
+  const out = document.getElementById('marginValue');
+  if (out) out.textContent = v.toFixed(v % 1 ? 1 : 0) + ' mm';
+}
+
+function syncColumnSlider() {
+  const sel = document.getElementById('columnSelect');
+  const slider = document.getElementById('columnRange');
+  const out = document.getElementById('columnValue');
+  if (!sel || !slider || !out) return;
+  const key = sel.value;
+  const v = cssNumber(key, layoutDefaults.widths[key]);
+  slider.value = v;
+  out.textContent = v.toFixed(v % 1 ? 1 : 0) + '%';
+}
+
+function setColumnWidth(value) {
+  const sel = document.getElementById('columnSelect');
+  if (!sel) return;
+  const key = sel.value;
+  const target = Math.max(3, Math.min(40, parseFloat(value) || layoutDefaults.widths[key]));
+
+  const widths = {};
+  let oldOtherTotal = 0;
+  widthKeys.forEach(k => {
+    widths[k] = cssNumber(k, layoutDefaults.widths[k]);
+    if (k !== key) oldOtherTotal += widths[k];
+  });
+
+  const newOtherTotal = 100 - target;
+  if (oldOtherTotal <= 0 || newOtherTotal <= 0) return;
+  const scale = newOtherTotal / oldOtherTotal;
+
+  widthKeys.forEach(k => {
+    const newValue = (k === key) ? target : widths[k] * scale;
+    document.documentElement.style.setProperty(k, newValue.toFixed(3) + '%');
+  });
+  syncColumnSlider();
+}
+
+function resetLayout() {
+  document.documentElement.style.setProperty('--side-margin', layoutDefaults.sideMargin + 'mm');
+  widthKeys.forEach(k => document.documentElement.style.setProperty(k, layoutDefaults.widths[k] + '%'));
+  const marginRange = document.getElementById('marginRange');
+  if (marginRange) marginRange.value = layoutDefaults.sideMargin;
+  const marginValue = document.getElementById('marginValue');
+  if (marginValue) marginValue.textContent = layoutDefaults.sideMargin + ' mm';
+  syncColumnSlider();
+}
+
+function syncLayoutControls() {
+  const margin = cssNumber('--side-margin', layoutDefaults.sideMargin);
+  const marginRange = document.getElementById('marginRange');
+  const marginValue = document.getElementById('marginValue');
+  if (marginRange) marginRange.value = margin;
+  if (marginValue) marginValue.textContent = margin.toFixed(margin % 1 ? 1 : 0) + ' mm';
+  syncColumnSlider();
+}
+
+document.addEventListener('DOMContentLoaded', syncLayoutControls);
+
+function setSelectedRow(row) {
+  document.querySelectorAll('.semester tbody tr.selected-row').forEach(r => r.classList.remove('selected-row'));
+  selectedRow = row;
+  if (selectedRow) selectedRow.classList.add('selected-row');
+}
+
+function toggleEdit() {
+  editing = !editing;
+  document.body.classList.toggle('editing', editing);
+  document.querySelectorAll('.main-title, .semester th, .semester td').forEach(el => {
+    el.contentEditable = editing ? 'true' : 'false';
+    el.spellcheck = false;
+  });
+  const btn = document.getElementById('editBtn');
+  btn.classList.toggle('active', editing);
+  btn.textContent = editing ? 'پایان ویرایش' : 'ویرایش متن';
+  const hint = document.getElementById('editHint');
+  hint.textContent = editing
+    ? 'متن و سطرها قابل ویرایش‌اند؛ حاشیه و عرض ستون‌ها را نیز از کنترل‌های بالا تنظیم کنید.'
+    : 'برای چاپ: A3، حالت افقی، مقیاس ۱۰۰٪ و Background graphics روشن باشد.';
+  if (!editing) setSelectedRow(null);
+}
+
+document.addEventListener('click', function(e) {
+  if (!editing) return;
+  const row = e.target.closest('.semester tbody tr');
+  if (!row || row.classList.contains('summary-row')) return;
+  setSelectedRow(row);
+});
+
+function addRow(where) {
+  if (!editing) {
+    alert('ابتدا حالت «ویرایش متن» را فعال کنید.');
+    return;
+  }
+  if (!selectedRow) {
+    alert('ابتدا روی یکی از سطرهای درسی جدول موردنظر کلیک کنید.');
+    return;
+  }
+  const newRow = selectedRow.cloneNode(true);
+  newRow.classList.remove('selected-row');
+  newRow.querySelectorAll('td').forEach(td => {
+    td.textContent = '';
+    td.contentEditable = 'true';
+    td.spellcheck = false;
+  });
+  if (where === 'above') selectedRow.before(newRow);
+  else selectedRow.after(newRow);
+  setSelectedRow(newRow);
+  const firstEditable = newRow.querySelector('td');
+  if (firstEditable) firstEditable.focus();
+}
+
+function deleteRow() {
+  if (!editing) {
+    alert('ابتدا حالت «ویرایش متن» را فعال کنید.');
+    return;
+  }
+  if (!selectedRow) {
+    alert('ابتدا سطری را که می‌خواهید حذف شود انتخاب کنید.');
+    return;
+  }
+  const semesterName = selectedRow.closest('.semester')?.getAttribute('aria-label') || 'این جدول';
+  if (!confirm('سطر انتخاب‌شده از ' + semesterName + ' حذف شود؟')) return;
+  const next = selectedRow.nextElementSibling;
+  const prev = selectedRow.previousElementSibling;
+  selectedRow.remove();
+  const candidate = next && !next.classList.contains('summary-row') ? next :
+                    (prev && !prev.classList.contains('summary-row') ? prev : null);
+  setSelectedRow(candidate);
+}
+
+function saveHtml() {
+  const clone = document.documentElement.cloneNode(true);
+  clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+  clone.querySelectorAll('.selected-row').forEach(el => el.classList.remove('selected-row'));
+  clone.querySelector('body')?.classList.remove('editing');
+  const editButton = clone.querySelector('#editBtn');
+  if (editButton) { editButton.classList.remove('active'); editButton.textContent = 'ویرایش متن'; }
+  const hint = clone.querySelector('#editHint');
+  if (hint) hint.textContent = 'برای چاپ: A3، حالت افقی، مقیاس ۱۰۰٪ و Background graphics روشن باشد.';
+  const html = '<!doctype html>\n' + clone.outerHTML;
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'chart_statistics_1402_1403_edited.html';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+</script>
+</body>
+</html>
