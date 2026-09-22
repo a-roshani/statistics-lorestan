@@ -36,7 +36,7 @@ window.PORTAL_CONFIG = {
       "kind": "book",
       "url": "files/syllabus402.pdf",
       "action": "view",
-      "showDownload": false,
+      "showDownload": true,
       "visible": true
     },
     {
@@ -47,7 +47,7 @@ window.PORTAL_CONFIG = {
       "kind": "book",
       "url": "files/syllabus404.pdf",
       "action": "view",
-      "showDownload": false,
+      "showDownload": true,
       "visible": true
     },
     {
