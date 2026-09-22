@@ -16,3 +16,9 @@ footer{display:flex;justify-content:center;align-items:center;gap:7px;flex-wrap:
 .link-dialog{width:min(480px,94vw);border:0;border-radius:22px;padding:0;box-shadow:0 24px 70px rgba(0,0,0,.24);direction:rtl}.link-dialog::backdrop{background:rgba(11,24,37,.35);backdrop-filter:blur(4px)}.link-dialog form{padding:18px}.dialog-head{display:flex;align-items:center;justify-content:space-between}.dialog-head h3{margin:0}.form-row{display:grid;grid-template-columns:1fr 2fr;gap:8px}.check{display:flex!important;align-items:center;gap:8px}.check input{width:auto!important;margin:0!important}.dialog-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:16px}
 @media(max-width:720px){.shell{width:min(100% - 20px,1120px);padding-top:10px}.hero{padding:28px 18px 25px;border-radius:24px}.logo-wrap{width:94px;height:94px}.resource-grid,.contact-grid{grid-template-columns:1fr}.section-heading{align-items:center}.resource-card{min-height:92px;padding:15px}.resource-icon{width:48px;height:48px}.resource-copy strong{font-size:16px}.hero-badges span:nth-child(2){display:none}.editor{width:96vw}.eyebrow{font-size:9px;letter-spacing:.9px}.contact-section{padding:16px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}#stats-bg{display:none}}
+/* Public portal refinements */
+.logo-wrap img{object-fit:contain;object-position:center}
+.stretched-link{position:relative;z-index:1}
+.resource-actions{position:relative;z-index:2}
+.contact-pill b{font-weight:800}.phone-pill{direction:rtl}.phone-pill .sep{opacity:.45}
+@media(max-width:520px){.contact-pill{width:100%;justify-content:center}.hero:after{font-size:58px}}
