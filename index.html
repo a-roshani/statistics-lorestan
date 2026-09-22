@@ -71,7 +71,22 @@
     <footer id="site-footer">گروه آمار دانشگاه لرستان • درگاه دسترسی سریع دانشجویان</footer>
   </main>
 
-  <script src="data/portal-config.js"></script>
-  <script src="assets/app.js"></script>
+  <script>
+  // بارگذاری تنظیمات و برنامه با cache-busting تا تغییرات GitHub بلافاصله بعد از Refresh دیده شوند.
+  (() => {
+    const stamp = Date.now();
+    const cfg = document.createElement('script');
+    cfg.src = `data/portal-config.js?v=${stamp}`;
+    cfg.onload = () => {
+      const app = document.createElement('script');
+      app.src = `assets/app.js?v=${stamp}`;
+      document.body.appendChild(app);
+    };
+    cfg.onerror = () => {
+      document.body.insertAdjacentHTML('beforeend','<p style="text-align:center;color:#a33">خطا در بارگذاری تنظیمات سایت.</p>');
+    };
+    document.body.appendChild(cfg);
+  })();
+  </script>
 </body>
 </html>

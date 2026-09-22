@@ -12,7 +12,7 @@ window.PORTAL_CONFIG = {
       "subtitle": "چارت هشت‌ترمی دانشجویان ورودی نیمسال ۴۰۲۱ تا ۴۰۳۱",
       "icon": "📊",
       "kind": "chart",
-      "url": "files/chart-402.html",
+      "url": "files/chart402.pdf",
       "action": "view",
       "showDownload": true,
       "visible": true
@@ -20,10 +20,10 @@ window.PORTAL_CONFIG = {
     {
       "id": "chart404",
       "title": "چارت ۴۰۴",
-      "subtitle": "چارت هشت‌ترمی دانشجویان ورودی ۱۴۰۴",
+      "subtitle": "چارت هشت‌ترمی دانشجویان ورودی نیمسال ۴۰۳۲ و بعد از آن",
       "icon": "📈",
       "kind": "chart",
-      "url": "files/chart-404.html",
+      "url": "files/chart404.pdf",
       "action": "view",
       "showDownload": true,
       "visible": true
@@ -31,23 +31,23 @@ window.PORTAL_CONFIG = {
     {
       "id": "syllabus402",
       "title": "سرفصل ۴۰۲",
-      "subtitle": "سرفصل و برنامه آموزشی ورودی ۱۴۰۲",
+      "subtitle": "سرفصل و برنامه آموزشی دانشجویان ورودی نیمسال ۴۰۲۱ تا ۴۰۳۱",
       "icon": "📘",
       "kind": "book",
-      "url": "files/syllabus-402.html",
+      "url": "files/syllabus402.pdf",
       "action": "view",
-      "showDownload": true,
+      "showDownload": false,
       "visible": true
     },
     {
       "id": "syllabus404",
       "title": "سرفصل ۴۰۴",
-      "subtitle": "سرفصل و برنامه آموزشی ورودی ۱۴۰۴",
+      "subtitle": "سرفصل و برنامه آموزشی دانشجویان ورودی نیمسال ۴۰۳۲ و بعد از آن",
       "icon": "📙",
       "kind": "book",
-      "url": "files/syllabus-404.html",
+      "url": "files/syllabus404.pdf",
       "action": "view",
-      "showDownload": true,
+      "showDownload": false,
       "visible": true
     },
     {
@@ -56,9 +56,9 @@ window.PORTAL_CONFIG = {
       "subtitle": "برنامه کلاس‌ها و زمان‌بندی ترم",
       "icon": "🗓️",
       "kind": "calendar",
-      "url": "files/weekly-4051.html",
+      "url": "files/weekly4051.pdf",
       "action": "view",
-      "showDownload": true,
+      "showDownload": false,
       "visible": true
     }
   ],
